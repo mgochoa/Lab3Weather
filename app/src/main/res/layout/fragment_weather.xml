@@ -1,26 +1,68 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="co.edu.udea.compumovil.gr3.lab3weather.Fragments.weather">
 
     <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
-        android:id="@+id/tv_weather"
+        android:layout_marginTop="40dp"
+        android:id="@+id/tv_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fragment Weather"
-        android:layout_centerInParent="true"
+      android:layout_gravity="center"
         android:textSize="30sp"
+        android:text="Ciudad"
         />
+        <TextView
+            android:layout_marginTop="40dp"
+            android:id="@+id/tv_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="30sp"
+            android:text="Temperatura"
+            />
+        <TextView
+            android:layout_marginTop="40dp"
+            android:id="@+id/tv_humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="30sp"
+            android:text="Humedad"
+            />
+        <TextView
+            android:layout_marginTop="40dp"
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="30sp"
+            android:text="Descripcion"
+            />
+        <TextView
+            android:layout_marginTop="40dp"
+            android:id="@+id/tv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="30sp"
+            android:text="Icono"
+            />
     <Button
+
         android:id="@+id/btn_weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_weather"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:textSize="30sp"
         android:text="get weather medellin"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_marginTop="10dp"/>
-
-</RelativeLayout>
+        android:layout_marginTop="20dp"/>
+    </LinearLayout>
+</ScrollView>
