@@ -54,6 +54,14 @@
             android:textSize="30sp"
             android:text="Icono"
             />
+        <ImageView
+            android:minHeight="20dp"
+            android:minWidth="20dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:id="@+id/icon_image"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
     <Button
 
         android:id="@+id/btn_weather"
