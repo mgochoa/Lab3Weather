@@ -69,7 +69,7 @@ public class weather extends Fragment {
                 String url ="http://api.openweathermap.org/data/2.5/weather?q=Medellin,co&appid="+API_KEY+"&lang=en&units=metric";
                 final String  urlImage="http://openweathermap.org/img/w/";
 
-// Request a string response from the provided URL.
+        // Request a string response from the provided URL.
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -97,24 +97,7 @@ public class weather extends Fragment {
                             }
                         });
                 MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequest);
-               // Log.d("weather.java",wp.getWeather().get(0).getIcon());
 
-               /* ImageRequest request = new ImageRequest(urlImage,
-                        new Response.Listener<Bitmap>() {
-                            @Override
-                            public void onResponse(Bitmap bitmap) {
-                                iconView.setImageBitmap(bitmap);
-                            }
-                        }, 0, 0, null,
-                        new Response.ErrorListener() {
-                            public void onErrorResponse(VolleyError error) {
-                                iconView.setImageResource(R.drawable.ic_menu_camera);
-                            }
-                        });
-// Add the request to the RequestQueue.
-
-
-                MySingleton.getInstance(getContext()).addToRequestQueue(request);*/
 
             }
         });
