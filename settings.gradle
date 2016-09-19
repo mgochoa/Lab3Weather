@@ -1,1 +1,1 @@
-include ':app', ':tabswipeexample'
+include ':app'

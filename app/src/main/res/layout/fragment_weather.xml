@@ -62,7 +62,7 @@
             android:id="@+id/icon_image"
             android:layout_width="24dp"
             android:layout_height="24dp" />
-    <Button
+   <!-- <Button
 
         android:id="@+id/btn_weather"
         android:layout_width="wrap_content"
@@ -71,6 +71,6 @@
         android:textSize="30sp"
         android:text="get weather medellin"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"/>-->
     </LinearLayout>
 </ScrollView>

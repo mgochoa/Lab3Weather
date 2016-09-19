@@ -21,6 +21,10 @@ import co.edu.udea.compumovil.gr3.lab3weather.Fragments.weather;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static String TIME_TAG="TIME";
+    public static String CITY_TAG="CITY";
+    public static  String ACTION_CUSTOM = "action.custom";
+    public static String OBJECT_WP="OBJECT";
 
     Fragment fragmentoGenerico;
     FragmentManager fragmentManager;
