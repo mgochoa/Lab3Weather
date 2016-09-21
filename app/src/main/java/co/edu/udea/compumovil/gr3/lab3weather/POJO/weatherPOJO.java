@@ -16,6 +16,24 @@ public class weatherPOJO implements Parcelable{
     main main;
     List<weather> weather;
 
+    protected weatherPOJO(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        cod = in.readInt();
+    }
+
+    public static final Creator<weatherPOJO> CREATOR = new Creator<weatherPOJO>() {
+        @Override
+        public weatherPOJO createFromParcel(Parcel in) {
+            return new weatherPOJO(in);
+        }
+
+        @Override
+        public weatherPOJO[] newArray(int size) {
+            return new weatherPOJO[size];
+        }
+    };
+
     public int getId() {
         return id;
     }
@@ -74,6 +92,8 @@ public class weatherPOJO implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeInt(cod);
     }
 }

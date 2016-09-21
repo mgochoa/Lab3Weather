@@ -1,12 +1,11 @@
 package co.edu.udea.compumovil.gr3.lab3weather.Fragments;
 
 
-import android.app.DownloadManager;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -14,30 +13,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import org.json.JSONObject;
-
 import co.edu.udea.compumovil.gr3.lab3weather.MainActivity;
 import co.edu.udea.compumovil.gr3.lab3weather.POJO.weatherPOJO;
 import co.edu.udea.compumovil.gr3.lab3weather.R;
-import co.edu.udea.compumovil.gr3.lab3weather.Services.WeatherService;
-import co.edu.udea.compumovil.gr3.lab3weather.Singleton.MySingleton;
+import co.edu.udea.compumovil.gr3.lab3weather.services.WeatherService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,12 +62,13 @@ public class weather extends Fragment {
         tvIcon=(TextView)thisview.findViewById(R.id.tv_icon);
         iconView=(ImageView)thisview.findViewById(R.id.icon_image);
 
-
-        Intent i = new Intent(getActivity(), WeatherService.class);
-        i.putExtra(MainActivity.TIME_TAG, time);
-        getActivity().startService(i);
+        if (!isMyServiceRunning()) {
+            Intent i = new Intent(getActivity(), WeatherService.class);
+            i.putExtra(MainActivity.TIME_TAG, time);
+            getActivity().startService(i);
+            Log.d("weather","My service was not running");
+        }
         myReceiver = new MyReceiver();
-
         //Creating the filter
         IntentFilter filter = new IntentFilter();
         filter.addAction(MainActivity.ACTION_CUSTOM);
@@ -92,6 +80,16 @@ public class weather extends Fragment {
         return thisview;
     }
 
+    public boolean isMyServiceRunning() {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (WeatherService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onDestroy() {
         mBroadcastManager.unregisterReceiver(myReceiver);
@@ -100,7 +98,7 @@ public class weather extends Fragment {
 
     public class MyReceiver extends BroadcastReceiver {
 
-        private final String TAG = "MyReceiver";
+        private final String TAG = "weather.java";
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -121,7 +119,7 @@ public class weather extends Fragment {
 
 
 
-            Toast.makeText(getContext(), "INTENT RECEIVED by Receiver", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "INTENT RECEIVED by Receiver", Toast.LENGTH_SHORT).show();
 
         }
     }

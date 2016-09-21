@@ -1,18 +1,14 @@
 package co.edu.udea.compumovil.gr3.lab3weather;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import co.edu.udea.compumovil.gr3.lab3weather.Fragments.settings;
@@ -26,7 +22,7 @@ public class MainActivity extends AppCompatActivity
     public static  String ACTION_CUSTOM = "action.custom";
     public static String OBJECT_WP="OBJECT";
 
-    Fragment fragmentoGenerico;
+    Fragment fragmentWeather,fragmentSettings,fragmentOption;
     FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +40,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        fragmentoGenerico = null;
         fragmentManager = getSupportFragmentManager();
-        fragmentoGenerico=new weather();
+        fragmentWeather=new weather();
+        fragmentSettings=new settings();
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.content_main, fragmentoGenerico)
+                    .replace(R.id.content_main, fragmentWeather)
                     .commit();
     }
 
@@ -70,21 +66,21 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        fragmentoGenerico = null;
+        fragmentOption=null;
         fragmentManager = getSupportFragmentManager();
 
        if (id == R.id.nav_weather) {
-           fragmentoGenerico=new weather();
+           fragmentOption=fragmentWeather;
 
         } else if (id == R.id.nav_settings) {
-            fragmentoGenerico=new settings();
+            fragmentOption=fragmentSettings;
 
        }
 
-        if(fragmentoGenerico!=null){
+        if(fragmentOption!=null){
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.content_main, fragmentoGenerico)
+                    .replace(R.id.content_main, fragmentOption)
                     .commit();
         }
 
@@ -92,4 +88,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

@@ -1,9 +1,8 @@
-package co.edu.udea.compumovil.gr3.lab3weather.Services;
+package co.edu.udea.compumovil.gr3.lab3weather.services;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -14,11 +13,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,11 +36,25 @@ public class WeatherService extends Service {
     TimerTask timerTask;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Timer timer = new Timer();
         int tiempo=intent.getIntExtra(MainActivity.TIME_TAG,60);
         String ciudad=intent.getStringExtra(MainActivity.CITY_TAG);
         Log.d(TAG, "El extra tiempo es: "+tiempo+" El extra ciudad es "+ciudad);
 
+
+
+        return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onCreate() {
+        Log.d(TAG, "Servicio creado...");
+        super.onCreate();
+        Timer timer = new Timer();
         timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -83,19 +94,6 @@ public class WeatherService extends Service {
         };
 
         timer.scheduleAtFixedRate(timerTask, 0, 10*1000);
-
-        return START_NOT_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onCreate() {
-        Log.d(TAG, "Servicio creado...");
-        super.onCreate();
     }
 
     @Nullable
@@ -103,6 +101,8 @@ public class WeatherService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+
 
     public WeatherService() {
 
