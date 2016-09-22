@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr3.lab3weather;
 
 import android.app.ActivityManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 
 import co.edu.udea.compumovil.gr3.lab3weather.Fragments.settings;
 import co.edu.udea.compumovil.gr3.lab3weather.Fragments.weather;
+import co.edu.udea.compumovil.gr3.lab3weather.POJO.weatherPOJO;
 import co.edu.udea.compumovil.gr3.lab3weather.services.WeatherService;
 
 public class MainActivity extends AppCompatActivity
@@ -28,12 +30,15 @@ public class MainActivity extends AppCompatActivity
     public static String OBJECT_WP="OBJECT";
     public static int time=60;
     public static String ciudad="Medellin";
+    public static ProgressDialog  progress;
 
     Fragment fragmentWeather,fragmentSettings,fragmentOption;
     FragmentManager fragmentManager;
+    weather w =new weather();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,10 +59,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        progress = ProgressDialog.show(this, "Cargando...",
+                "Por favor espere", true);
         fragmentManager = getSupportFragmentManager();
-        fragmentWeather=new weather();
+        fragmentWeather = new weather();
         fragmentSettings=new settings();
-            fragmentManager
+        fragmentManager
                     .beginTransaction()
                     .replace(R.id.content_main, fragmentWeather)
                     .commit();
@@ -123,6 +130,7 @@ public class MainActivity extends AppCompatActivity
         }
         return false;
     }
+
 
 
 }

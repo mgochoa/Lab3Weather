@@ -33,9 +33,8 @@ public class weather extends Fragment {
     private MyReceiver myReceiver;
     public static LocalBroadcastManager mBroadcastManager;
     final String  urlImage="http://openweathermap.org/img/w/";
-    //Button getWeather;
     ImageView iconView;
-    TextView tvCiudad,tvTemp,tvHum,tvDescription,tvIcon;
+    TextView tvCiudad,tvTemp,tvHum,tvDescription;
     weatherPOJO wp;
     ImageLoader imageLoader= ImageLoader.getInstance();
 
@@ -55,7 +54,6 @@ public class weather extends Fragment {
         tvTemp=(TextView)thisview.findViewById(R.id.tv_temp);
         tvHum=(TextView)thisview.findViewById(R.id.tv_humidity);
         tvDescription=(TextView)thisview.findViewById(R.id.tv_description);
-        tvIcon=(TextView)thisview.findViewById(R.id.tv_icon);
         iconView=(ImageView)thisview.findViewById(R.id.icon_image);
         imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
 
@@ -85,15 +83,13 @@ public class weather extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            if(MainActivity.progress.isShowing()){
+               MainActivity.progress.dismiss();
+            }
 
             wp=intent.getParcelableExtra(MainActivity.OBJECT_WP);
             if(wp!=null){
-                tvCiudad.setText(wp.getName());
-                tvDescription.setText(WordUtils.capitalize(wp.getWeather().get(0).getDescription()));
-                tvTemp.setText(Double.toString(wp.getMain().getTemp()));
-                tvHum.setText(Double.toString(wp.getMain().getHumidity()));
-                tvIcon.setText(wp.getWeather().get(0).getIcon());
-                imageLoader.displayImage(urlImage+wp.getWeather().get(0).getIcon()+".png",iconView);
+                updateUI(wp);
                // Log.d("weather.java",wp.getName()+wp.getMain().getTemp()+wp.getMain().getHumidity()+wp.getWeather().get(0).getDescription()+wp.getWeather().get(0).getIcon());
             }
 
@@ -101,9 +97,20 @@ public class weather extends Fragment {
 
 
 
-            Toast.makeText(getContext(), "INTENT RECEIVED by Receiver", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Información actualizada", Toast.LENGTH_SHORT).show();
 
         }
     }
+    public void updateUI(weatherPOJO wp){
+        this.tvCiudad.setText("\t"+wp.getName());
+        tvDescription.setText("\t"+WordUtils.capitalize(wp.getWeather().get(0).getDescription()));
+        tvTemp.setText("\t"+Double.toString(wp.getMain().getTemp()));
+        tvHum.setText("\t"+Double.toString(wp.getMain().getHumidity()));
+        imageLoader.displayImage(urlImage+wp.getWeather().get(0).getIcon()+".png",iconView);
+
+    }
+
+
+
 
 }
