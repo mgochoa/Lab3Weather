@@ -1,7 +1,6 @@
 package co.edu.udea.compumovil.gr3.lab3weather.Fragments;
 
 
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,14 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import co.edu.udea.compumovil.gr3.lab3weather.MainActivity;
 import co.edu.udea.compumovil.gr3.lab3weather.POJO.weatherPOJO;
 import co.edu.udea.compumovil.gr3.lab3weather.R;
-import co.edu.udea.compumovil.gr3.lab3weather.services.WeatherService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,11 +34,8 @@ public class weather extends Fragment {
     //Button getWeather;
     ImageView iconView;
     TextView tvCiudad,tvTemp,tvHum,tvDescription,tvIcon;
-    private int time=60;
-    Gson outGson;
     weatherPOJO wp;
     ImageLoader imageLoader= ImageLoader.getInstance();
-    private final String API_KEY="a114981a45d6ad13ade4e27c615513b9";
 
     public weather() {
         // Required empty public constructor
@@ -61,13 +55,8 @@ public class weather extends Fragment {
         tvDescription=(TextView)thisview.findViewById(R.id.tv_description);
         tvIcon=(TextView)thisview.findViewById(R.id.tv_icon);
         iconView=(ImageView)thisview.findViewById(R.id.icon_image);
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
 
-        if (!isMyServiceRunning()) {
-            Intent i = new Intent(getActivity(), WeatherService.class);
-            i.putExtra(MainActivity.TIME_TAG, time);
-            getActivity().startService(i);
-            Log.d("weather","My service was not running");
-        }
         myReceiver = new MyReceiver();
         //Creating the filter
         IntentFilter filter = new IntentFilter();
@@ -80,15 +69,7 @@ public class weather extends Fragment {
         return thisview;
     }
 
-    public boolean isMyServiceRunning() {
-        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (WeatherService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     @Override
     public void onDestroy() {
@@ -110,7 +91,6 @@ public class weather extends Fragment {
                 tvTemp.setText(Double.toString(wp.getMain().getTemp()));
                 tvHum.setText(Double.toString(wp.getMain().getHumidity()));
                 tvIcon.setText(wp.getWeather().get(0).getIcon());
-                imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
                 imageLoader.displayImage(urlImage+wp.getWeather().get(0).getIcon()+".png",iconView);
                // Log.d("weather.java",wp.getName()+wp.getMain().getTemp()+wp.getMain().getHumidity()+wp.getWeather().get(0).getDescription()+wp.getWeather().get(0).getIcon());
             }

@@ -1,9 +1,16 @@
 package co.edu.udea.compumovil.gr3.lab3weather.services;
 
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -13,15 +20,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import co.edu.udea.compumovil.gr3.lab3weather.Fragments.weather;
 import co.edu.udea.compumovil.gr3.lab3weather.MainActivity;
 import co.edu.udea.compumovil.gr3.lab3weather.POJO.weatherPOJO;
+import co.edu.udea.compumovil.gr3.lab3weather.R;
 import co.edu.udea.compumovil.gr3.lab3weather.Singleton.MySingleton;
 
 /**
@@ -34,19 +46,24 @@ public class WeatherService extends Service {
     weather w=new weather();
     public weatherPOJO wp;
     TimerTask timerTask;
+    int tiempo=MainActivity.time;
+    String ciudad=MainActivity.ciudad;
+    final String  urlImage="http://openweathermap.org/img/w/";
+    ImageLoader imageLoader= ImageLoader.getInstance();
+    int cont=0;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int tiempo=intent.getIntExtra(MainActivity.TIME_TAG,60);
-        String ciudad=intent.getStringExtra(MainActivity.CITY_TAG);
+
         Log.d(TAG, "El extra tiempo es: "+tiempo+" El extra ciudad es "+ciudad);
 
 
 
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "Servicio destruido...");
         super.onDestroy();
     }
 
@@ -55,11 +72,12 @@ public class WeatherService extends Service {
         Log.d(TAG, "Servicio creado...");
         super.onCreate();
         Timer timer = new Timer();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getApplicationContext()));
         timerTask = new TimerTask() {
             @Override
             public void run() {
                 RequestQueue queue = Volley.newRequestQueue(getBaseContext());
-                String url ="http://api.openweathermap.org/data/2.5/weather?q=Medellin,co&appid="+API_KEY+"&lang=en&units=metric";
+                String url ="http://api.openweathermap.org/data/2.5/weather?q=Medellin,co&appid="+API_KEY+"&lang=es&units=metric";
 
 
 
@@ -67,6 +85,7 @@ public class WeatherService extends Service {
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
+                            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                             @Override
                             public void onResponse(JSONObject response) {
                                 outGson=new Gson();
@@ -75,8 +94,44 @@ public class WeatherService extends Service {
                                 Intent intent = new Intent();
                                 intent.setAction(MainActivity.ACTION_CUSTOM);
                                 intent.putExtra(MainActivity.OBJECT_WP,  wp);
-                                weather.mBroadcastManager.sendBroadcastSync(intent);
+                                if(MainActivity.active) {
+                                    weather.mBroadcastManager.sendBroadcastSync(intent);
+                                }else{
+                                    Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+// Because clicking the notification opens a new ("special") activity, there's
+// no need to create an artificial back stack.
+                                    PendingIntent resultPendingIntent =
+                                            PendingIntent.getActivity(
+                                                    getApplicationContext(),
+                                                    1,
+                                                    resultIntent,
+                                                    PendingIntent.FLAG_UPDATE_CURRENT
+                                            );
 
+                                    //notification
+                                    String contenido=String.format(Locale.getDefault(),"Temperatura: %f \nHumedad: %f\nDescripción: %s"
+                                            ,wp.getMain().getTemp()
+                                            ,wp.getMain().getHumidity()
+                                            , WordUtils.capitalize(wp.getWeather().get(0).getDescription()));
+
+                                    NotificationCompat.Builder mBuilder =
+                                            new NotificationCompat.Builder(getApplicationContext())
+                                                    .setSmallIcon(R.drawable.iconweather)
+                                                    .setContentTitle("Clima para hoy")
+                                                    .setContentText(wp.getWeather().get(0).getDescription())
+                                                    .setDefaults(Notification.DEFAULT_ALL) // requires VIBRATE permission
+                                                    .setContentIntent(resultPendingIntent)
+                                                    .setStyle(new NotificationCompat.BigTextStyle()
+                                                            .bigText(contenido));
+
+
+
+                                    NotificationManager notificationManager =
+                                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                    notificationManager.notify(cont, mBuilder.build() );
+                                    cont++;
+
+                                }
 
                             }
                         }, new Response.ErrorListener() {

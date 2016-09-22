@@ -1,5 +1,8 @@
 package co.edu.udea.compumovil.gr3.lab3weather;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,18 +12,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import co.edu.udea.compumovil.gr3.lab3weather.Fragments.settings;
 import co.edu.udea.compumovil.gr3.lab3weather.Fragments.weather;
+import co.edu.udea.compumovil.gr3.lab3weather.services.WeatherService;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    public static boolean active = false;
     public static String TIME_TAG="TIME";
     public static String CITY_TAG="CITY";
     public static  String ACTION_CUSTOM = "action.custom";
     public static String OBJECT_WP="OBJECT";
+    public static int time=60;
+    public static String ciudad="Medellin";
 
     Fragment fragmentWeather,fragmentSettings,fragmentOption;
     FragmentManager fragmentManager;
@@ -31,6 +38,13 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        if (!isMyServiceRunning()) {
+            Intent i = new Intent(this, WeatherService.class);
+            i.putExtra(MainActivity.TIME_TAG, time);
+            this.startService(i);
+            Log.d("weather","My service was not running");
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -87,6 +101,27 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
+    }
+    public boolean isMyServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (WeatherService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
