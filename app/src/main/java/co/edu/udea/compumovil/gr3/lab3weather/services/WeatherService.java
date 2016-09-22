@@ -98,8 +98,6 @@ public class WeatherService extends Service {
                                     weather.mBroadcastManager.sendBroadcastSync(intent);
                                 }else{
                                     Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-// Because clicking the notification opens a new ("special") activity, there's
-// no need to create an artificial back stack.
                                     PendingIntent resultPendingIntent =
                                             PendingIntent.getActivity(
                                                     getApplicationContext(),
@@ -109,16 +107,16 @@ public class WeatherService extends Service {
                                             );
 
                                     //notification
-                                    String contenido=String.format(Locale.getDefault(),"Temperatura: %f \nHumedad: %f\nDescripción: %s"
-                                            ,wp.getMain().getTemp()
-                                            ,wp.getMain().getHumidity()
+                                    String contenido=String.format(Locale.getDefault(),"Temperatura: %d °C \nHumedad: %d%% \nDescripción: %s"
+                                            ,(int)wp.getMain().getTemp()
+                                            ,(int)wp.getMain().getHumidity()
                                             , WordUtils.capitalize(wp.getWeather().get(0).getDescription()));
 
                                     NotificationCompat.Builder mBuilder =
                                             new NotificationCompat.Builder(getApplicationContext())
                                                     .setSmallIcon(R.drawable.iconweather)
                                                     .setContentTitle("Clima para hoy")
-                                                    .setContentText(wp.getWeather().get(0).getDescription())
+                                                    .setContentText(WordUtils.capitalize(wp.getWeather().get(0).getDescription()))
                                                     .setDefaults(Notification.DEFAULT_ALL) // requires VIBRATE permission
                                                     .setContentIntent(resultPendingIntent)
                                                     .setStyle(new NotificationCompat.BigTextStyle()

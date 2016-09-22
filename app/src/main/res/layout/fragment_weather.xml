@@ -17,6 +17,8 @@
       android:layout_gravity="center"
         android:textSize="30sp"
         android:text="Ciudad"
+        android:drawableLeft="@drawable/cityscape"
+        android:gravity="center_vertical"
         />
         <TextView
             android:layout_marginTop="40dp"
@@ -26,6 +28,8 @@
             android:layout_gravity="center"
             android:textSize="30sp"
             android:text="Temperatura"
+            android:drawableLeft="@drawable/thermometer"
+            android:gravity="center_vertical"
             />
         <TextView
             android:layout_marginTop="40dp"
@@ -34,7 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="30sp"
-            android:text="Humedad"
+            android:drawableLeft="@drawable/rain"
+            android:text=" Humedad"
+            android:gravity="center_vertical"
             />
         <TextView
             android:layout_marginTop="40dp"
@@ -42,8 +48,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center_vertical"
             android:textSize="30sp"
-            android:text="Descripcion"
+            android:text=" Descripcion"
+            android:drawableLeft="@drawable/ic_info_black_24dp"
             />
         <TextView
             android:layout_marginTop="40dp"
@@ -55,13 +63,13 @@
             android:text="Icono"
             />
         <ImageView
-            android:minHeight="20dp"
-            android:minWidth="20dp"
+            android:minHeight="30dp"
+            android:minWidth="30dp"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
             android:id="@+id/icon_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
    <!-- <Button
 
         android:id="@+id/btn_weather"

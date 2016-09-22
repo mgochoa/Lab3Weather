@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import co.edu.udea.compumovil.gr3.lab3weather.MainActivity;
 import co.edu.udea.compumovil.gr3.lab3weather.POJO.weatherPOJO;
 import co.edu.udea.compumovil.gr3.lab3weather.R;
@@ -87,7 +89,7 @@ public class weather extends Fragment {
             wp=intent.getParcelableExtra(MainActivity.OBJECT_WP);
             if(wp!=null){
                 tvCiudad.setText(wp.getName());
-                tvDescription.setText(wp.getWeather().get(0).getDescription());
+                tvDescription.setText(WordUtils.capitalize(wp.getWeather().get(0).getDescription()));
                 tvTemp.setText(Double.toString(wp.getMain().getTemp()));
                 tvHum.setText(Double.toString(wp.getMain().getHumidity()));
                 tvIcon.setText(wp.getWeather().get(0).getIcon());
