@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -49,6 +51,7 @@ public class weather extends Fragment {
         // Inflate the layout for this fragment
         View thisview=inflater.inflate(R.layout.fragment_weather, container, false);
         getActivity().setTitle("Clima");
+
         //getWeather=(Button)thisview.findViewById(R.id.btn_weather);
         tvCiudad=(TextView)thisview.findViewById(R.id.tv_city);
         tvTemp=(TextView)thisview.findViewById(R.id.tv_temp);
@@ -65,6 +68,12 @@ public class weather extends Fragment {
         //Registering the receiver
         mBroadcastManager = LocalBroadcastManager.getInstance(getActivity().getApplicationContext());
         mBroadcastManager.registerReceiver(myReceiver, filter);
+        if ((savedInstanceState != null)
+                && (savedInstanceState.getParcelable(MainActivity.OBJECT_WP) != null)) {
+                    wp=savedInstanceState.getParcelable(MainActivity.OBJECT_WP);
+            Log.d("Saving",wp.getName()+wp.getMain().getTemp()+wp.getMain().getHumidity()+wp.getWeather().get(0).getDescription()+wp.getWeather().get(0).getIcon());
+            updateUI(wp);
+                }
 
         return thisview;
     }
@@ -83,9 +92,9 @@ public class weather extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(MainActivity.progress.isShowing()){
-               MainActivity.progress.dismiss();
-            }
+           // if(MainActivity.progress.isShowing()){
+               //MainActivity.progress.dismiss();
+            //}
 
             wp=intent.getParcelableExtra(MainActivity.OBJECT_WP);
             if(wp!=null){
@@ -109,6 +118,30 @@ public class weather extends Fragment {
         imageLoader.displayImage(urlImage+wp.getWeather().get(0).getIcon()+".png",iconView);
 
     }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            wp=savedInstanceState.getParcelable(MainActivity.OBJECT_WP);
+            Log.d("Saving",wp.getName()+wp.getMain().getTemp()+wp.getMain().getHumidity()+wp.getWeather().get(0).getDescription()+wp.getWeather().get(0).getIcon());
+            updateUI(wp);
+            // Restore last state for checked position.
+
+        }
+    }
+    
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.d("Saving",wp.getName()+wp.getMain().getTemp()+wp.getMain().getHumidity()+wp.getWeather().get(0).getDescription()+wp.getWeather().get(0).getIcon());
+
+        outState.putParcelable(MainActivity.OBJECT_WP,wp);
+        //Save the fragment's state here
+
+    }
+
 
 
 

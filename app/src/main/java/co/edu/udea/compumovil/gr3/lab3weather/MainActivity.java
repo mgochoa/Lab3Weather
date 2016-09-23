@@ -4,7 +4,9 @@ import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity
     public static int time=60;
     public static String ciudad="Medellin";
     public static ProgressDialog  progress;
+    public static final String PREFS_NAME = "MyPrefsFile";
+
 
     Fragment fragmentWeather,fragmentSettings,fragmentOption;
     FragmentManager fragmentManager;
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences data = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,11 +64,15 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        progress = ProgressDialog.show(this, "Cargando...",
-                "Por favor espere", true);
+        //progress = ProgressDialog.show(this, "Cargando...","Por favor espere", true);
         fragmentManager = getSupportFragmentManager();
-        fragmentWeather = new weather();
-        fragmentSettings=new settings();
+        if (savedInstanceState != null) {
+            //Restore the fragment's instance
+            fragmentWeather = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+        }
+        else{
+            fragmentWeather = new weather();
+        }
         fragmentManager
                     .beginTransaction()
                     .replace(R.id.content_main, fragmentWeather)
@@ -87,23 +96,32 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Class fragmentClass;
         fragmentOption=null;
-        fragmentManager = getSupportFragmentManager();
 
-       if (id == R.id.nav_weather) {
-           fragmentOption=fragmentWeather;
+        switch(id) {
+            case R.id.nav_weather:
+                fragmentClass=weather.class;
+                break;
+            case R.id.nav_settings:
+                fragmentClass=settings.class;
+                break;
 
-        } else if (id == R.id.nav_settings) {
-            fragmentOption=fragmentSettings;
-
-       }
-
-        if(fragmentOption!=null){
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.content_main, fragmentOption)
-                    .commit();
+            default:
+                fragmentClass=weather.class;
         }
+        try {
+            fragmentOption = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment;
+        fragmentManager.beginTransaction().replace(R.id.content_main, fragmentOption).commit();
+
+        // Highlight the selected item has been done by NavigationView
+        item.setChecked(true);
+        // Set action bar title
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -129,6 +147,13 @@ public class MainActivity extends AppCompatActivity
             }
         }
         return false;
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //Save the fragment's instance
+        getSupportFragmentManager().putFragment(outState, "mContent", fragmentWeather);
     }
 
 

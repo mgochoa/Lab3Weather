@@ -48,9 +48,6 @@ public class WeatherService extends Service {
     TimerTask timerTask;
     int tiempo=MainActivity.time;
     String ciudad=MainActivity.ciudad;
-    final String  urlImage="http://openweathermap.org/img/w/";
-    ImageLoader imageLoader= ImageLoader.getInstance();
-    int cont=0;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -72,11 +69,11 @@ public class WeatherService extends Service {
         Log.d(TAG, "Servicio creado...");
         super.onCreate();
         Timer timer = new Timer();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(getApplicationContext()));
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                RequestQueue queue = Volley.newRequestQueue(getBaseContext());
+                //RequestQueue queue = Volley.newRequestQueue(getBaseContext());
+                //Variable ciudad para cambiar en settings
                 String url ="http://api.openweathermap.org/data/2.5/weather?q=Medellin,co&appid="+API_KEY+"&lang=es&units=metric";
 
 
@@ -107,10 +104,16 @@ public class WeatherService extends Service {
                                             );
 
                                     //notification
-                                    String contenido=String.format(Locale.getDefault(),"Temperatura: %d °C \nHumedad: %d%% \nDescripción: %s"
-                                            ,(int)wp.getMain().getTemp()
-                                            ,(int)wp.getMain().getHumidity()
-                                            , WordUtils.capitalize(wp.getWeather().get(0).getDescription()));
+                                    StringBuilder contenido =new StringBuilder();
+                                    contenido.append("Temperatura: ");
+                                    contenido.append((int)wp.getMain().getTemp());
+                                    contenido.append("°C");
+                                    contenido.append("\nHumedad: ");
+                                    contenido.append((int)wp.getMain().getHumidity());
+                                    contenido.append("%");
+                                    contenido.append("\nDescripción: ");
+                                    contenido.append(WordUtils.capitalize(wp.getWeather().get(0).getDescription()));
+
 
                                     NotificationCompat.Builder mBuilder =
                                             new NotificationCompat.Builder(getApplicationContext())
@@ -120,14 +123,13 @@ public class WeatherService extends Service {
                                                     .setDefaults(Notification.DEFAULT_ALL) // requires VIBRATE permission
                                                     .setContentIntent(resultPendingIntent)
                                                     .setStyle(new NotificationCompat.BigTextStyle()
-                                                            .bigText(contenido));
+                                                            .bigText(contenido.toString()));
 
 
 
                                     NotificationManager notificationManager =
                                             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                                    notificationManager.notify(cont, mBuilder.build() );
-                                    cont++;
+                                    notificationManager.notify(0, mBuilder.build() );
 
                                 }
 
@@ -145,7 +147,7 @@ public class WeatherService extends Service {
 
             }
         };
-
+        //Variable time a cambiar en los settings.
         timer.scheduleAtFixedRate(timerTask, 0, 10*1000);
     }
 
