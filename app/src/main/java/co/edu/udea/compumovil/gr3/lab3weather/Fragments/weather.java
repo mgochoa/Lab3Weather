@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -17,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -43,7 +41,7 @@ public class weather extends Fragment {
     weatherPOJO wp;
     ImageLoader imageLoader= ImageLoader.getInstance();
     Calendar cal;
-    SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+    SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 
     public weather() {
         // Required empty public constructor
@@ -98,14 +96,11 @@ public class weather extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-           // if(MainActivity.progress.isShowing()){
-               //MainActivity.progress.dismiss();
-            //}
 
             wp=intent.getParcelableExtra(MainActivity.OBJECT_WP);
             if(wp!=null){
                 updateUI(wp);
-               // Log.d("weather.java",wp.getName()+wp.getMain().getTemp()+wp.getMain().getHumidity()+wp.getWeather().get(0).getDescription()+wp.getWeather().get(0).getIcon());
+
             }
 
             Log.d(TAG, "INTENT RECEIVED");
@@ -120,7 +115,7 @@ public class weather extends Fragment {
         cal=Calendar.getInstance();
         this.tvCiudad.setText("\t"+wp.getName());
         tvDescription.setText("\t"+WordUtils.capitalize(wp.getWeather().get(0).getDescription()));
-        tvTemp.setText("\t"+Double.toString(wp.getMain().getTemp()));
+        tvTemp.setText("\t"+Double.toString(wp.getMain().getTemp())+"°C");
         tvHum.setText("\t"+Double.toString(wp.getMain().getHumidity()));
         imageLoader.displayImage(urlImage+wp.getWeather().get(0).getIcon()+".png",iconView);
         tvTime.setText("\t"+sdf.format(cal.getTime()));

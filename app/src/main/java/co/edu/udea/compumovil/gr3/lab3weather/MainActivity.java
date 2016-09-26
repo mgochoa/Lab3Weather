@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //progress = ProgressDialog.show(this, "Cargando...","Por favor espere", true);
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState != null) {
             //Restore the fragment's instance
@@ -73,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         else{
             fragmentWeather = new weather();
         }
+        fragmentSettings=new settings();
         fragmentManager
                     .beginTransaction()
                     .replace(R.id.content_main, fragmentWeather)
@@ -101,23 +101,22 @@ public class MainActivity extends AppCompatActivity
 
         switch(id) {
             case R.id.nav_weather:
-                fragmentClass=weather.class;
+
+               fragmentOption=fragmentWeather;
+                if(!fragmentWeather.isVisible()){
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragmentOption).commit();
+                }
                 break;
             case R.id.nav_settings:
-                fragmentClass=settings.class;
+               fragmentOption=fragmentSettings;
+                if(!fragmentSettings.isVisible()){
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragmentOption).commit();
+                }
                 break;
 
             default:
-                fragmentClass=weather.class;
+                fragmentOption=fragmentWeather;
         }
-        try {
-            fragmentOption = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Insert the fragment by replacing any existing fragment;
-        fragmentManager.beginTransaction().replace(R.id.content_main, fragmentOption).commit();
 
         // Highlight the selected item has been done by NavigationView
         item.setChecked(true);

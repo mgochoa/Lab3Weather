@@ -14,19 +14,14 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,14 +40,24 @@ public class WeatherService extends Service {
     Gson outGson;
     public weatherPOJO wp;
     TimerTask timerTask;
-    int tiempo=MainActivity.time;
-    public static String ciudad=MainActivity.ciudad;
-    public static int time=MainActivity.time;
+    public  String ciudad=MainActivity.ciudad;
+    public  int time=MainActivity.time;
     Timer timer = new Timer();
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.d(TAG, "El extra tiempo es: "+tiempo+" El extra ciudad es "+ciudad);
+
+        timerTask.cancel();
+        time=intent.getIntExtra(MainActivity.TIME_TAG,60);
+        if (intent.getStringExtra(MainActivity.CITY_TAG)!=null){
+            ciudad=intent.getStringExtra(MainActivity.CITY_TAG);
+        }else{
+            ciudad=MainActivity.ciudad;
+        }
+        createTimer();
+        schedule();
+
+
 
 
 
@@ -70,6 +75,14 @@ public class WeatherService extends Service {
         Log.d(TAG, "Servicio creado...");
         super.onCreate();
 
+        createTimer();
+        //Variable time a cambiar en los settings.
+        schedule();
+    }
+    public void schedule() {
+        timer.scheduleAtFixedRate(timerTask, 0, time*1000);
+    }
+    public void createTimer(){
         timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -106,7 +119,9 @@ public class WeatherService extends Service {
 
                                     //notification
                                     StringBuilder contenido =new StringBuilder();
-                                    contenido.append("Temperatura: ");
+                                    contenido.append("Ciudad: ");
+                                    contenido.append(WordUtils.capitalize(wp.getName()));
+                                    contenido.append("\nTemperatura: ");
                                     contenido.append((int)wp.getMain().getTemp());
                                     contenido.append("°C");
                                     contenido.append("\nHumedad: ");
@@ -148,11 +163,6 @@ public class WeatherService extends Service {
 
             }
         };
-        //Variable time a cambiar en los settings.
-        schedule();
-    }
-    public void schedule() {
-        timer.scheduleAtFixedRate(timerTask, 0, time*1000);
     }
 
     @Nullable

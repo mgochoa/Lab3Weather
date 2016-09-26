@@ -1,8 +1,11 @@
 package co.edu.udea.compumovil.gr3.lab3weather.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import co.edu.udea.compumovil.gr3.lab3weather.MainActivity;
 import co.edu.udea.compumovil.gr3.lab3weather.R;
 import co.edu.udea.compumovil.gr3.lab3weather.services.WeatherService;
 
@@ -57,8 +61,17 @@ public class settings extends Fragment {
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WeatherService.ciudad=acCities.getText().toString();
-                WeatherService.time=Integer.parseInt(timeSpinner.getSelectedItem().toString());
+
+                Intent i = new Intent(getActivity(), WeatherService.class);
+                i.putExtra(MainActivity.TIME_TAG,Integer.parseInt(timeSpinner.getSelectedItem().toString()));
+                i.putExtra(MainActivity.CITY_TAG,acCities.getText().toString());
+                getActivity().startService(i);
+                Fragment fragment = new weather();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 
 
             }
