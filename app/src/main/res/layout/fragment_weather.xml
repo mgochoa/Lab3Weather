@@ -52,6 +52,17 @@
             android:text=" Descripcion"
             android:drawableLeft="@drawable/ic_info_black_24dp"
             />
+        <TextView
+            android:layout_marginTop="40dp"
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center_vertical"
+            android:textSize="30sp"
+            android:text=" Tiempo"
+            android:drawableLeft="@drawable/ic_access_time_black_24dp"
+            />
 
         <ImageView
             android:minHeight="30dp"

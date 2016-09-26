@@ -8,4 +8,35 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="time_picker">
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+    </string-array>
+    <string-array name="ciudades">
+    <item>Barranquilla</item>
+    <item>Pereira</item>
+    <item>Bucaramanga</item>
+    <item>Medellin</item>
+    <item>Sabaneta</item>
+    <item>Envigado</item>
+    <item>Cali</item>
+    <item>Bogota</item>
+    <item>Itagui</item>
+    <item>Manizales</item>
+    <item>Barrancabermeja</item>
+    <item>Cucuta</item>
+    <item>Soledad</item>
+    <item>Facatativa</item>
+    <item>Yopal</item>
+    <item>Caldas</item>
+    <item>Cartagena</item>
+    <item>Santa Marta</item>
+    <item>Pasto</item>
+    <item>Leticia</item>
+    </string-array>
 </resources>

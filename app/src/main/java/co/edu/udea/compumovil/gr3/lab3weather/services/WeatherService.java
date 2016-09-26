@@ -43,11 +43,12 @@ public class WeatherService extends Service {
     private static final String TAG ="WeatherService.java";
     private final String API_KEY="a114981a45d6ad13ade4e27c615513b9";
     Gson outGson;
-    weather w=new weather();
     public weatherPOJO wp;
     TimerTask timerTask;
     int tiempo=MainActivity.time;
-    String ciudad=MainActivity.ciudad;
+    public static String ciudad=MainActivity.ciudad;
+    public static int time=MainActivity.time;
+    Timer timer = new Timer();
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -68,13 +69,13 @@ public class WeatherService extends Service {
     public void onCreate() {
         Log.d(TAG, "Servicio creado...");
         super.onCreate();
-        Timer timer = new Timer();
+
         timerTask = new TimerTask() {
             @Override
             public void run() {
                 //RequestQueue queue = Volley.newRequestQueue(getBaseContext());
                 //Variable ciudad para cambiar en settings
-                String url ="http://api.openweathermap.org/data/2.5/weather?q=Medellin,co&appid="+API_KEY+"&lang=es&units=metric";
+                String url ="http://api.openweathermap.org/data/2.5/weather?q="+ciudad+",co&appid="+API_KEY+"&lang=es&units=metric";
 
 
 
@@ -148,7 +149,10 @@ public class WeatherService extends Service {
             }
         };
         //Variable time a cambiar en los settings.
-        timer.scheduleAtFixedRate(timerTask, 0, 10*1000);
+        schedule();
+    }
+    public void schedule() {
+        timer.scheduleAtFixedRate(timerTask, 0, time*1000);
     }
 
     @Nullable

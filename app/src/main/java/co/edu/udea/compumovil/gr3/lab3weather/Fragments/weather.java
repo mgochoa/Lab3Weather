@@ -23,6 +23,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import co.edu.udea.compumovil.gr3.lab3weather.MainActivity;
 import co.edu.udea.compumovil.gr3.lab3weather.POJO.weatherPOJO;
 import co.edu.udea.compumovil.gr3.lab3weather.R;
@@ -36,9 +39,11 @@ public class weather extends Fragment {
     public static LocalBroadcastManager mBroadcastManager;
     final String  urlImage="http://openweathermap.org/img/w/";
     ImageView iconView;
-    TextView tvCiudad,tvTemp,tvHum,tvDescription;
+    TextView tvCiudad,tvTemp,tvHum,tvDescription,tvTime;
     weatherPOJO wp;
     ImageLoader imageLoader= ImageLoader.getInstance();
+    Calendar cal;
+    SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 
     public weather() {
         // Required empty public constructor
@@ -57,6 +62,7 @@ public class weather extends Fragment {
         tvTemp=(TextView)thisview.findViewById(R.id.tv_temp);
         tvHum=(TextView)thisview.findViewById(R.id.tv_humidity);
         tvDescription=(TextView)thisview.findViewById(R.id.tv_description);
+        tvTime=(TextView)thisview.findViewById(R.id.tv_time);
         iconView=(ImageView)thisview.findViewById(R.id.icon_image);
         imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
 
@@ -111,11 +117,13 @@ public class weather extends Fragment {
         }
     }
     public void updateUI(weatherPOJO wp){
+        cal=Calendar.getInstance();
         this.tvCiudad.setText("\t"+wp.getName());
         tvDescription.setText("\t"+WordUtils.capitalize(wp.getWeather().get(0).getDescription()));
         tvTemp.setText("\t"+Double.toString(wp.getMain().getTemp()));
         tvHum.setText("\t"+Double.toString(wp.getMain().getHumidity()));
         imageLoader.displayImage(urlImage+wp.getWeather().get(0).getIcon()+".png",iconView);
+        tvTime.setText("\t"+sdf.format(cal.getTime()));
 
     }
 
@@ -131,7 +139,7 @@ public class weather extends Fragment {
 
         }
     }
-    
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

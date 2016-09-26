@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,41 +6,62 @@
     tools:context="co.edu.udea.compumovil.gr3.lab3weather.Fragments.settings">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fragment Settings"
-        android:layout_centerInParent="true"
-        android:textSize="30sp"
-        />
+
     <LinearLayout
+        android:id="@+id/city_set"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:orientation="horizontal">
         <TextView
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ciudad"/>
-        <EditText
+        <AutoCompleteTextView
+            android:id="@+id/auto_complete_city"
+            android:layout_marginLeft="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
     <LinearLayout
+        android:layout_below="@id/city_set"
+        android:id="@+id/time_set"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tiempo"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <Spinner
+            android:layout_marginLeft="20dp"
+            android:id="@+id/spinner_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:textAlignment="center"
+            android:gravity="center_vertical"
+            />
+
+
 
     </LinearLayout>
+    <Button
+        android:id="@+id/btn_set"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Establecer"
+        android:textSize="30sp"
+        android:onClick="settingParameters"
+        android:layout_marginBottom="50dp"/>
 
 
-</LinearLayout>
+</RelativeLayout>
