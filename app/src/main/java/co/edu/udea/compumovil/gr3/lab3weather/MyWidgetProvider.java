@@ -24,40 +24,21 @@ import co.edu.udea.compumovil.gr3.lab3weather.services.WeatherService;
  */
 public class MyWidgetProvider extends AppWidgetProvider {
 
-    private static final String ACTION_CLICK = "ACTION_CLICK";
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
 
-        // Get all ids
         ComponentName thisWidget = new ComponentName(context,
                 MyWidgetProvider.class);
-
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        for (int widgetId : allWidgetIds) {
-            // create some random data
 
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_layout);
-            WeatherService w_service = new WeatherService();
-            w_service.setAppWidgetManager(appWidgetManager);
-            w_service.setRemoteViews(remoteViews);
-            w_service.setThisWidget(thisWidget);
-
-            w_service.updatewidget();
-
-            // Register an onClickListener
-            Intent intent = new Intent(context, MyWidgetProvider.class);
-
-            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.wid_city, pendingIntent);
-            appWidgetManager.updateAppWidget(widgetId, remoteViews);
-        }
+        // Build the intent to call the service
+        Intent intent = new Intent(context.getApplicationContext(),
+                WeatherService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
+        intent.putExtra("WID", false);
+        // Update the widgets via the service
+        context.startService(intent);
     }
 
 }
