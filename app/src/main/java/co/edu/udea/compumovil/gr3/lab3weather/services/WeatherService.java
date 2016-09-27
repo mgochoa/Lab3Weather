@@ -5,6 +5,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -12,6 +14,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -27,6 +30,7 @@ import java.util.TimerTask;
 
 import co.edu.udea.compumovil.gr3.lab3weather.Fragments.weather;
 import co.edu.udea.compumovil.gr3.lab3weather.MainActivity;
+import co.edu.udea.compumovil.gr3.lab3weather.MyWidgetProvider;
 import co.edu.udea.compumovil.gr3.lab3weather.POJO.weatherPOJO;
 import co.edu.udea.compumovil.gr3.lab3weather.R;
 import co.edu.udea.compumovil.gr3.lab3weather.Singleton.MySingleton;
@@ -43,16 +47,27 @@ public class WeatherService extends Service {
     public  String ciudad=MainActivity.ciudad;
     public  int time=MainActivity.time;
     Timer timer = new Timer();
+
+    AppWidgetManager appWidgetManager;
+    ComponentName thisWidget;
+    RemoteViews remoteViews;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
 
         timerTask.cancel();
-        time=intent.getIntExtra(MainActivity.TIME_TAG,60);
+        try {
+            time = intent.getIntExtra(MainActivity.TIME_TAG, 60);
+
         if (intent.getStringExtra(MainActivity.CITY_TAG)!=null){
             ciudad=intent.getStringExtra(MainActivity.CITY_TAG);
         }else{
             ciudad=MainActivity.ciudad;
+        }
+        }catch (NullPointerException e){
+            time=60;
+            ciudad="Medellin";
         }
         createTimer();
         schedule();
@@ -171,9 +186,52 @@ public class WeatherService extends Service {
         return null;
     }
 
-
-
     public WeatherService() {
 
+    }
+
+
+    public void updatewidget(){
+        if (appWidgetManager != null) {
+            String finalString = "sync @";
+            String ciudad, temp, desc;
+            try {
+                ciudad = wp.getName();
+                temp = String.valueOf(wp.getMain().getTemp());
+                desc = wp.getWeather().get(0).getDescription();
+            } catch (NullPointerException e){
+                ciudad = "No hay servicio";
+                temp = "No hay servicio";
+                desc = "No hay servicio";
+            }
+            remoteViews.setTextViewText(R.id.wid_city, ciudad);
+            remoteViews.setTextViewText(R.id.wid_temp, temp);
+            remoteViews.setTextViewText(R.id.wid_desc, desc);
+            appWidgetManager.updateAppWidget(thisWidget, remoteViews);
+        }
+    }
+
+    public AppWidgetManager getAppWidgetManager() {
+        return appWidgetManager;
+    }
+
+    public void setAppWidgetManager(AppWidgetManager appWidgetManager) {
+        this.appWidgetManager = appWidgetManager;
+    }
+
+    public ComponentName getThisWidget() {
+        return thisWidget;
+    }
+
+    public void setThisWidget(ComponentName thisWidget) {
+        this.thisWidget = thisWidget;
+    }
+
+    public RemoteViews getRemoteViews() {
+        return remoteViews;
+    }
+
+    public void setRemoteViews(RemoteViews remoteViews) {
+        this.remoteViews = remoteViews;
     }
 }

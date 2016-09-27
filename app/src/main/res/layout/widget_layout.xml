@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutRelativeWid"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/myshape"
+    >
+
+<LinearLayout
+    android:id="@+id/layoutLineraWid"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_margin="8dip"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/wid_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="@string/city"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        />
+    <TextView
+        android:id="@+id/wid_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="Temperatura"
+        android:drawableLeft="@drawable/thermometer"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        />
+    <TextView
+        android:id="@+id/wid_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:textSize="30sp"
+        android:text="@string/descrip"
+        android:layout_marginLeft="10dp"
+        />
+</LinearLayout>
+
+    <ImageView
+        android:id="@+id/wid_icon_image"
+        android:minHeight="30dp"
+        android:minWidth="30dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_toRightOf="@id/layoutLineraWid"/>
+
+</RelativeLayout>

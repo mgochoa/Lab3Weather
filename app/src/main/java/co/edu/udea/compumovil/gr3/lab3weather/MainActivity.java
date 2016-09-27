@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity
     public static String TIME_TAG="TIME";
     public static String CITY_TAG="CITY";
     public static  String ACTION_CUSTOM = "action.custom";
+    public static String ACTION_WIDGET="widget.custom";
     public static String OBJECT_WP="OBJECT";
     public static int time=60;
     public static String ciudad="Medellin";
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState != null) {
             //Restore the fragment's instance
-            fragmentWeather = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
         }
         else{
             fragmentWeather = new weather();
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
 
         //Save the fragment's instance
-        getSupportFragmentManager().putFragment(outState, "mContent", fragmentWeather);
+
     }
 
 

@@ -74,9 +74,7 @@ public class weather extends Fragment {
         mBroadcastManager.registerReceiver(myReceiver, filter);
         if ((savedInstanceState != null)
                 && (savedInstanceState.getParcelable(MainActivity.OBJECT_WP) != null)) {
-                    wp=savedInstanceState.getParcelable(MainActivity.OBJECT_WP);
-            Log.d("Saving",wp.getName()+wp.getMain().getTemp()+wp.getMain().getHumidity()+wp.getWeather().get(0).getDescription()+wp.getWeather().get(0).getIcon());
-            updateUI(wp);
+
                 }
 
         return thisview;
@@ -126,22 +124,13 @@ public class weather extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            wp=savedInstanceState.getParcelable(MainActivity.OBJECT_WP);
-            Log.d("Saving",wp.getName()+wp.getMain().getTemp()+wp.getMain().getHumidity()+wp.getWeather().get(0).getDescription()+wp.getWeather().get(0).getIcon());
-            updateUI(wp);
-            // Restore last state for checked position.
 
-        }
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Log.d("Saving",wp.getName()+wp.getMain().getTemp()+wp.getMain().getHumidity()+wp.getWeather().get(0).getDescription()+wp.getWeather().get(0).getIcon());
 
-        outState.putParcelable(MainActivity.OBJECT_WP,wp);
-        //Save the fragment's state here
 
     }
 
